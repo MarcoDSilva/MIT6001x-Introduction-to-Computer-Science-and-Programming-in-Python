@@ -15,7 +15,7 @@ to achieve a down payment on a $1M house in 36 months! 
 """
 
 #salary from user
-starting_salary = int(input('Enter the starting salary: '))
+starting_salary = float(input('Enter the starting salary: '))
 
 #relevant data
 house_total_cost =  1000000 
@@ -23,45 +23,51 @@ portion_down_payment = house_total_cost * 0.25
 semi_annual_raise = 0.07 
 monthly_salary = starting_salary / 12
 
-current_savings = 0
+current_savings = 0.0
 
 #bisection search
 margin = 100
 min_num = 0
 max_num = 10000
 rate_integer = 0
+
 steps = 0
-savings_rate = 0.0
 is_possible = True
 
-while margin <= abs(portion_down_payment - current_savings):
+while is_possible:
     steps += 1
     
-    current_savings = 0       
-    rate_integer = max_num + min_num // 2
+    current_savings = 0.0
+    
+        
+    #calculate a new num    
+    rate_integer = (max_num + min_num) // 2
+    
     savings_rate = rate_integer / 10000
     
-    #calculating the savings with the rate that was gotten
-    for m in range(0,36,1):
-        current_savings += (current_savings * 0.04) / 12
-        current_savings += savings_rate * monthly_salary 
-        
-        if m % 6 == 0:
-            monthly_salary += (monthly_salary * semi_annual_raise)     
-            
-    print(f'Current savings {round(current_savings,2)}')
+    months = 1
     
-    if margin <= abs(portion_down_payment - current_savings):
+    #calculating the savings with the rate that was gotten
+    while months <= 36:        
+        current_savings += savings_rate * monthly_salary
+        current_savings += (current_savings * 0.04) / 12
+        
+        if months % 6 == 0:
+            monthly_salary += (monthly_salary * semi_annual_raise)  
+        
+        months += 1
+            
+    #if we finally hit a tier of savings good enough we stop
+    if abs(current_savings - portion_down_payment) <= margin:
         break
             
-    if current_savings < portion_down_payment:    
-        min_num = rate_integer
-    else:   
+    #conditional to get a better saving ratio
+    if current_savings > portion_down_payment:    
         max_num = rate_integer
+    else:   
+        min_num = rate_integer
         
     if min_num >= max_num:
-        print(f'{steps} tried')
-        print('error no savings possible')
         is_possible = False
         break
     
@@ -71,3 +77,6 @@ if is_possible:
     print(f'{steps} tried')
     print(f'savings are {current_savings}')
     print(f'ratings are {savings_rate}')
+else:
+    print(f'{steps} tried')
+    print('error no savings possible')
