@@ -68,7 +68,28 @@ def getGuessedWord(secretWord, lettersGuessed):
     returns: string, comprised of letters and underscores that represents
       what letters in secretWord have been guessed so far.
     '''
-    # FILL IN YOUR CODE HERE...
+    tempWord = list(secretWord)
+    hiddenWord = []
+    
+    #add to the list the same underscores as chars
+    for i in tempWord:
+        hiddenWord.append('_ ')  
+    
+    #loop through chars in the guesses
+    for char in lettersGuessed:
+        
+        #if char exists we count them, since index only gives first occurence
+        if char in tempWord:   
+            numChars = tempWord.count(char)
+            
+            #while we have occurences, we delete them from the tempWord
+            while numChars > 0:         
+                index = tempWord.index(char)
+                hiddenWord[index] = char
+                tempWord[index] = ''
+                numChars -= 1
+    
+    return "".join(hiddenWord)
 
 
 
