@@ -70,8 +70,7 @@ def getWordScore(word, n):
     word: string (lowercase letters)
     n: integer (HAND_SIZE; i.e., hand size required for additional points)
     returns: int >= 0
-    """
-    # TO DO ... <-- Remove this comment when you code this function
+    """    
     total_points = 0
     used_letters = 0
     
@@ -154,9 +153,13 @@ def updateHand(hand, word):
     hand: dictionary (string -> int)    
     returns: dictionary (string -> int)
     """
-    # TO DO ... <-- Remove this comment when you code this function
+    new_hand = hand.copy()
+    
+    for letter in word:
+        if letter in new_hand:
+            new_hand[letter] = new_hand.get(letter, 0) - 1
 
-
+    return new_hand
 
 #
 # Problem #3: Test word validity
@@ -172,7 +175,24 @@ def isValidWord(word, hand, wordList):
     hand: dictionary (string -> int)
     wordList: list of lowercase strings
     """
-    # TO DO ... <-- Remove this comment when you code this function
+    # this could be a try exception, but an if is cleaner
+    if word == '':
+        return False
+    
+    new_hand = hand.copy()   #copy of a hand to remove the used cards
+    word_comparison = []
+    
+    #if word exists in the list, let's check the hand
+    if word in wordList:        
+        for char in word:
+            if char in new_hand.keys() and new_hand[char] > 0:
+                word_comparison.append(char)
+                new_hand[char] -= 1
+    
+    if word == "".join(word_comparison): # comparison between word and the 'word' created from the hand
+        return True        
+        
+    return False
 
 
 #
@@ -186,7 +206,7 @@ def calculateHandlen(hand):
     hand: dictionary (string-> int)
     returns: integer
     """
-    # TO DO... <-- Remove this comment when you code this function
+    return sum(hand.values())
 
 
 
