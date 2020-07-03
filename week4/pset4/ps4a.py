@@ -207,7 +207,7 @@ def calculateHandlen(hand):
     returns: integer
     """
     return sum(hand.values())
-
+    
 
 
 def playHand(hand, wordList, n):
@@ -231,36 +231,45 @@ def playHand(hand, wordList, n):
       wordList: list of lowercase strings
       n: integer (HAND_SIZE; i.e., hand size required for additional points)
       
-    """
-    # BEGIN PSEUDOCODE <-- Remove this comment when you code this function; do your coding within the pseudocode (leaving those comments in-place!)
+    """    
     # Keep track of the total score
+    score = 0
+    game_over = False
+    original_size = calculateHandlen(hand)
     
     # As long as there are still letters left in the hand:
-    
-        # Display the hand
+    while calculateHandlen(hand) > 0:
         
+        # Display the hand
+        print('Current hand:', end=' ')
+        displayHand(hand)
+       
         # Ask user for input
+        user_pick = input('Enter word, or "." to indicate that you are finished: ')
         
         # If the input is a single period:
-        
-            # End the game (break out of the loop)
-
+        if user_pick == '.':   
+            return "Goodbye! Total score: " + str(score) + " points."
+            break
             
         # Otherwise (the input is not a single period):
-        
+        else:
             # If the word is not valid:
-            
+            if not isValidWord(user_pick, hand, wordList):
                 # Reject invalid word (print a message followed by a blank line)
-
+                print('Invalid word, please try again.\n')
             # Otherwise (the word is valid):
-
+            else:
                 # Tell the user how many points the word earned, and the updated total score, in one line followed by a blank line
-                
+                score += getWordScore(user_pick, original_size)
+                print('" ' + user_pick + ' " earned  ' + str(getWordScore(user_pick, original_size)) + 
+                      " points. Total: " + str(score) + "  points \n")
+               
                 # Update the hand 
-                
+                hand = updateHand(hand, user_pick)                    
 
     # Game is over (user entered a '.' or ran out of letters), so tell user the total score
-
+    return "Run out of letters. Total score:  " + str(score) + "  points."       
 
 #
 # Problem #5: Playing a game
