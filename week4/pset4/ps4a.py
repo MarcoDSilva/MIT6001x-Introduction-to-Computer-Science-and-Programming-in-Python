@@ -234,7 +234,6 @@ def playHand(hand, wordList, n):
     """    
     # Keep track of the total score
     score = 0
-    game_over = False
     original_size = calculateHandlen(hand)
     
     # As long as there are still letters left in the hand:
@@ -250,7 +249,6 @@ def playHand(hand, wordList, n):
         # If the input is a single period:
         if user_pick == '.':   
             return "Goodbye! Total score: " + str(score) + " points."
-            break
             
         # Otherwise (the input is not a single period):
         else:
@@ -287,11 +285,35 @@ def playGame(wordList):
  
     2) When done playing the hand, repeat from step 1    
     """
-    # TO DO ... <-- Remove this comment when you code this function
-    print("playGame not yet implemented.") # <-- Remove this line when you code the function
-   
-
-
+    game_over = False
+    hand_played = False
+    
+    while not game_over:        
+        player_choice = input('Enter n to deal a new hand, r to replay the last hand, or e to end game: ')
+          
+        # finishing game
+        if player_choice == 'e':
+            break
+        
+        # new hand dealt
+        if player_choice == 'n':
+            hand_played = True  
+            
+            #new hand
+            hand = dealHand(HAND_SIZE) 
+            playHand(hand, wordList, HAND_SIZE)
+            last_hand = hand.copy()
+            
+        # repeat last hand or ask new input if hand never played
+        elif player_choice == 'r' and not hand_played:
+            print('You have not played a hand yet. Please play a new hand first!')
+            
+        elif player_choice == 'r' and hand_played == True:
+            playHand(last_hand, wordList, HAND_SIZE) 
+            
+        #wrong  command
+        else:
+            print('Invalid command.')
 
 #
 # Build data structures used for entire session and play game
