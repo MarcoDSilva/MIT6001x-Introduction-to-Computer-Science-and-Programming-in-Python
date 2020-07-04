@@ -1,7 +1,6 @@
 from ps4a import *
 import time
 
-
 #
 #
 # Computer chooses a word
@@ -124,9 +123,60 @@ def playGame(wordList):
 
     wordList: list (string)
     """
-    # TO DO... <-- Remove this comment when you code this function
-    print("playGame not yet implemented.") # <-- Remove this when you code this function
-
+    
+    hand_played = False # flag in case of replay hand is picked without never playing one
+    single_or_cpu = '' 
+    
+    while True:        
+        single_or_cpu = ''
+        user_input = input('Enter n to deal a new hand, r to replay the last hand, or e to end game: ')
+        
+        # if command is not one of these 3, we print it's invalid and ask for another input
+        while not user_input == 'r' and not user_input == 'e' and not user_input == 'n':
+            print('Invalid command.')
+            user_input = input('Enter n to deal a new hand, r to replay the last hand, or e to end game: ')
+        
+        #if the command is R and no hand has being played, we re-ask input
+        while user_input == 'r' and not hand_played:
+            print('You have not played a hand yet. Please play a new hand first!')
+            user_input = input('Enter n to deal a new hand, r to replay the last hand, or e to end game: ')
+        
+        # finishing game
+        if user_input == 'e':
+            break
+        
+        # we keep asking the input if the user doesn't pick one of the 2 options available
+        while not single_or_cpu == 'c' and not single_or_cpu == 'u':            
+            if not single_or_cpu == '':
+                print('Invalid command.')
+                
+            single_or_cpu = input('\nEnter u to have yourself play, c to have the computer play: ')
+        
+        # if the option was to repeat hand, we verify if any hand was played first
+        if user_input == 'r' and not hand_played:
+            print('You have not played a hand yet. Please play a new hand first!')
+        elif user_input == 'r' and hand_played == True:
+            
+             # repeat last hand or ask new input if hand never played 
+             if single_or_cpu == 'u':       
+                 playHand(last_hand, wordList, HAND_SIZE) 
+             else:
+                 compPlayHand(last_hand, wordList, HAND_SIZE)
+                 
+        # otherwise it's a new play         
+        elif user_input == 'n':  
+            hand_played = True
+            #new hand
+            hand = dealHand(HAND_SIZE) 
+            last_hand = hand.copy()
+              
+            # play for human
+            if single_or_cpu == 'u':
+                playHand(hand, wordList, HAND_SIZE)
+            else:
+                compPlayHand(hand, wordList, HAND_SIZE)
+        else:
+            print('Invalid command.')
         
 #
 # Build data structures used for entire session and play game
