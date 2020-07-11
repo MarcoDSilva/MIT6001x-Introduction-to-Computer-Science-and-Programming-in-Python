@@ -114,7 +114,7 @@ class Message(object):
             
         for i in range(0, len(upper)):
             pos = (shift + i) % 26
-            dic[upper[i]] = upper[pos]s            
+            dic[upper[i]] = upper[pos]          
       
         return dic
 
@@ -130,7 +130,16 @@ class Message(object):
         Returns: the message text (string) in which every character is shifted
              down the alphabet by the input shift
         '''
-        pass #delete this line and replace with your code here
+        dic = self.build_shift_dict(shift)
+        s = ""
+        
+        for char in self.message_text:
+            if char in dic.keys():
+                s += dic[char]
+            else:
+                s += char
+        
+        return s
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
