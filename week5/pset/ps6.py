@@ -240,32 +240,29 @@ class CiphertextMessage(Message):
             splited = decrypted.split(' ')
             
             for word in splited:                
-                if is_word(self.valid_words,word):
+                if is_word(self.valid_words, word):
                     if dic.get(i,0) == 0:
                         dic[i] = decrypted
                     else:
                         if len(dic.get(i)) < len(decrypted):
                             dic[i] += f' {word}' 
-        
-        
+                            
+                        if len(dic.get(i)) >= len(decrypted):
+                            dic.pop(i, None)
+                            break        
+      
         for k in dic.keys():
             tup = (k, dic[k])
             
-            if tup:
-                return tup
+        return tup
 
-        
 
 #Example test case (PlaintextMessage)
-plaintext = PlaintextMessage('hello world', 2)
-print('Expected Output: jgnnq yqtnf')
+plaintext = PlaintextMessage('i am tobias', 2)
+print('Expected Output: k co vqdkcu')
 print('Actual Output:', plaintext.get_message_text_encrypted())
     
 #Example test case (CiphertextMessage)
-ciphertext = CiphertextMessage('jgnnq yqtnf')
-print('Expected Output:', (24, 'hello world'))
+ciphertext = CiphertextMessage('k co vqdkcu')
+print('Expected Output:', (2, 'i am tobias'))
 print('Actual Output:', ciphertext.decrypt_message())
-
-
-dec = CiphertextMessage(get_story_string())
-print('story ', dec.decrypt_message())
