@@ -253,12 +253,71 @@ class CiphertextMessage(Message):
       
         for k in dic.keys():
             tup = (k, dic[k])
-            
+
         return tup
+    
+    # the real answer is
+    # def decrypt_story():
+    #     story = CiphertextMessage(get_story_string())
+    #     return story.decrypt_message()
+
+    # hand made decrypt_story to get a better solution
+    def decrypt_story(self):
+        ''' 
+        Decripts the self.message_text by trying every possible shit. 
+        '''
+        dic = {}
+        
+        # we try every possible shift and add it to a dictionary
+        for i in range(0, 27):
+            encrypting_dict = self.build_shift_dict(i)
+            
+            decrypted = self.apply_shift(i)
+            splited = decrypted.split(' ')
+            
+            for word in splited:                
+                if is_word(self.valid_words, word):
+                    if dic.get(i,0) == 0:
+                        dic[i] = decrypted
+                    else:
+                        if len(dic.get(i)) < len(decrypted):
+                            dic[i] += f' {word}' 
+
+        
+        # a list that will store the count of valid words and key of the dic
+        to_return = []
+        
+        # iterate through all key values, we check the valid words it contain
+        # and add it to the list.
+        for k in dic.keys():
+            count= 0
+            
+            for w in dic[k].split(' '):
+                if is_word(self.valid_words, w):
+                    count += 1
+            
+            to_return.append(" " + str(count) + ", " + str(k))
+         
+        # here we declare the key and max possible num of words temp variable
+        key = 0
+        max_count = 0
+        
+        # we loop through the words in the key values (that we split first)
+        # if the one with biggest count is find, we update the key/max_count combo
+        for m in to_return:
+            split = m.split(', ')
+            if int(split[0]) > max_count:
+                max_count = int(split[0])
+                key = int(split[1])
+            
+        # after we found the max_count entry, we return it as a tuple
+        return (key, dic[key])
+    
+        
 
 
 #Example test case (PlaintextMessage)
-plaintext = PlaintextMessage('i am tobias', 2)
+plaintext = PlaintextMessage('Jack Florey is a mythical character created on the spur of a moment to help cover an insufficiently planned hack. He has been registered for classes at MIT twice before, but has reportedly never passed a class. It has been the tradition of the residents of East Campus to become Jack Florey for a few nights each year to educate incoming students in the ways, means, and ethics of hacking.', 16)
 print('Expected Output: k co vqdkcu')
 print('Actual Output:', plaintext.get_message_text_encrypted())
     
@@ -266,3 +325,6 @@ print('Actual Output:', plaintext.get_message_text_encrypted())
 ciphertext = CiphertextMessage('k co vqdkcu')
 print('Expected Output:', (2, 'i am tobias'))
 print('Actual Output:', ciphertext.decrypt_message())
+
+test = CiphertextMessage(get_story_string())
+print('story: ', test.decrypt_story())
